@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author  : zeshan
-# @File    : miitmproxy_mook.py
+# @File    : miitmproxy_mock.py
 
 # https://docs.mitmproxy.org/
 import json

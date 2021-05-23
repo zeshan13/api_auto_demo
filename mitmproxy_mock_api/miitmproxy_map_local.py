@@ -39,17 +39,11 @@ class Events:
         # 实现rewrite，重写响应数据信息
         # if 条件代表匹配规则
         if "https://stock.xueqiu.com/v5/stock/batch/quote.json?_t" in flow.request.url and "x=" in flow.request.url:
-            # # 响应数据转换成dic
-            # datas = json.loads(flow.response.text)
             # 修改响应数据：读取json文件数据，赋值给data
-            data = json.load(open("quote.json", encoding="utf-8"))
-            # with open("./quote.json",encoding="utf-8") as f:
-            #     data = ""
-            #     for line in f.readlines():
-            #         data = line + data
-            #     print(data)
-            # data转换成str重新赋值给flow.response.text
-            flow.response.text = json.dumps(data)
+            with open("./quote.json",encoding="utf-8") as f:
+                data = f.read() #str类型
+            # data重新赋值给flow.response.text
+            flow.response.text = data
 
 # 将event事件加到插件中
 addons = [
