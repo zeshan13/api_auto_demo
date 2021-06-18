@@ -1,7 +1,5 @@
 import yaml
 
-import yaml
-
 
 class Tools:
     def read_yaml(self, file_path):
