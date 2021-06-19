@@ -18,7 +18,7 @@ class TestDepartmentApi(BaseTestcase):
     def test_get_department(self):
         r = self.dp.get_department_list()
         self.assert_suuc_code(r)
-        self.assert_eq(len(r.json()["department"]), 19)
+        self.assert_eq(len(r.json()["department"]), 1)
 
     def test_create_department(self):
         name = "test_department"
