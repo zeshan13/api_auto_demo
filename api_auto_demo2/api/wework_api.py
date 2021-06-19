@@ -18,10 +18,10 @@ class WeWorkApi(BaseApi):
     def get_token(self, ):
         data = {
             "method": "get",
-            "url": cfg.gettoken,
+            "url": cfg.GETTOKEN,
             "params": {
-                "corpid": cfg.corpid,
-                "corpsecret": cfg.corpsecret
+                "corpid": cfg.CORPID,
+                "corpsecret": cfg.CORPSECRET
             }
         }
         res = self.request(data)
