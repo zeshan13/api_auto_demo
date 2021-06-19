@@ -15,6 +15,7 @@ class WeWorkApi:
     _GET_CORP_TAG_LIST_URL = _BASE_URL + "/externalcontact/get_corp_tag_list"
     _ADD_CORP_TAG_URL = _BASE_URL + "/externalcontact/add_corp_tag"
     _DEL_CORP_TAG_URL = _BASE_URL + "/externalcontact/del_corp_tag"
+    _EDIT_CORP_TAG_URL = _BASE_URL + "/externalcontact/edit_corp_tag"
     _CORPID = "XXXXXXXXXXX"
     _CORPSECRET = "XXXXXXXXXXX"
 
@@ -29,13 +30,12 @@ class WeWorkApi:
             logging.info("url:%s ,params:%s response:%s" % (self._GETTOKEN_URL, params, json.dumps(res.json())))
             self.token = res.json()["access_token"]
 
-    def get_corp_tag(self):
+    def get_corp_tag(self,json_datas=None):
         params = {
             "access_token": self.token
         }
-        res = requests.post(url=self._GET_CORP_TAG_LIST_URL, params=params)
+        res = requests.post(url=self._GET_CORP_TAG_LIST_URL, params=params,json=json_datas)
         logging.info("url:%s ,params:%s response:%s" % (self._GET_CORP_TAG_LIST_URL, params, json.dumps(res.json())))
-
         return res
 
     def add_corp_tag(self, json_datas):
@@ -51,3 +51,20 @@ class WeWorkApi:
         logging.info("url:%s ,params:%s ,json_datas %s ，response:%s" % (
             self._DEL_CORP_TAG_URL, params, json_datas, json.dumps(res.json())))
         return res
+
+    def edit_corp_tag(self, json_datas):
+        params = {"access_token": self.token}
+        res = requests.post(url=self._EDIT_CORP_TAG_URL, params=params, json=json_datas)
+        logging.info("url:%s ,params:%s ,json_datas %s ，response:%s" % (
+            self._EDIT_CORP_TAG_URL, params, json_datas, json.dumps(res.json())))
+        return res
+
+    def clear_tags(self):
+        rsp = self.get_corp_tag().json()
+        tag_list = [tag["id"] for group in rsp["tag_group"] for tag in group["tag"]]
+
+        if len(tag_list) > 2:
+            json_datas = {
+                "tag_id": tag_list[2:]
+            }
+            self.del_corp_tag(json_datas)
