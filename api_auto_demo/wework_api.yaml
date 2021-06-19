@@ -1,0 +1,36 @@
+test_add_corp_tag:
+  json_datas:
+    group_name: "add_group_name1"
+    tag:
+      - name: "add_tag_name1"
+
+test_del_corp_tag_by_tag_id:
+  json_datas:
+    tag_id:
+      - "{{tag_id}}"
+  add_json_datas:
+    group_name: "del_group_name1"
+    tag:
+      - name: "del_tag_name1"
+
+
+test_del_corp_tag_by_group_id:
+  json_datas:
+    group_id:
+      - "{{group_id}}"
+  add_json_datas:
+    group_name: "del_group_name2"
+    tag:
+      - name: "del_tag_name2"
+
+test_edit_corp_tag:
+  json_datas:
+    id: "{{tag_id}}"
+    name: "edit_tag_name2"
+  add_json_datas:
+    group_name: "edit_group_name1"
+    tag:
+      - name: "edit_tag_name1"
+  get_json_datas:
+    tag_id:
+      - "{{tag_id}}"

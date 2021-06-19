@@ -21,8 +21,9 @@ class Tools:
 if __name__ == '__main__':
     t = Tools()
     file_path = "init_datas_count.yaml"
-    init_data = t.read_yaml(file_path)
-    print(init_data)
+    wework_api_path = "wework_api.yaml"
+    datas = t.read_yaml(wework_api_path)
+    print(datas)
 
-    a = t.get_init_data("group_count", file_path)
-    print(a)
+    # a = t.get_init_data("group_count", file_path)
+    # print(a)
