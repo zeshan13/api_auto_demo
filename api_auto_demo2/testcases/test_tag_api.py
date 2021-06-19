@@ -6,11 +6,11 @@
 import time
 import jsonpath
 import pytest
-
 from api_auto_demo.api_auto_demo2.api.externalcontact.tag import Tag
+from api_auto_demo.api_auto_demo2.testcases.base_testcase import BaseTestcase
 
 
-class TestWeWorkApi:
+class TestTagApi(BaseTestcase):
     def setup_class(self):
         self.tag = Tag()
         self.tag.clear_all_tags()
@@ -22,10 +22,9 @@ class TestWeWorkApi:
 
     def test_get_corp_tag(self):
         r = self.tag.get_corp_tag()
-        assert r.status_code == 200
+        self.assert_suuc_code(r)
         # 断言返回errorcode
-        assert r.json()["errcode"] == 0
-        assert len(r.json()["tag_group"]) == 0
+        self.assert_eq(len(r.json()["tag_group"]), 0)
 
     def test_add_corp_tag(self):
         # 传参加入时间,避免重复添加
@@ -36,17 +35,17 @@ class TestWeWorkApi:
         group_name = "GROP_NAME" + rq
         r = self.tag.add_corp_tag(tag_list=tag_list, group_name=group_name)
         # 断言返回errorcode
-        assert r.json()["errcode"] == 0
+        self.assert_suuc_code(r)
 
         # 调用get_corp_tag查询接口，查询当前所有标签
         r = self.tag.get_corp_tag()
-        assert r.json()["errcode"] == 0
-        assert group_name in [group["group_name"] for group in r.json()["tag_group"]]
+        self.assert_suuc_code(r)
+        self.assert_in(group_name, [group["group_name"] for group in r.json()["tag_group"]])
 
         # 使用jsonpath
         tag_name_list = jsonpath.jsonpath(r.json(), "$..tag[*].name")
-        assert tag_name1 in set(tag_name_list)
-        assert tag_name2 in set(tag_name_list)
+        self.assert_in(tag_name1, tag_name_list)
+        self.assert_in(tag_name2, tag_name_list)
 
     def test_del_corp_tag_by_tag_id(self):
         # 添加数据
@@ -60,13 +59,13 @@ class TestWeWorkApi:
         r = self.tag.del_corp_tag(tag_id_list=tag_id_list)
 
         # 断言返回errorcode
-        assert r.json()["errcode"] == 0
+        self.assert_suuc_code(r)
         # 调用get_corp_tag查询接口，查询当前所有标签
-        res_body = self.tag.get_corp_tag().json()
+        r = self.tag.get_corp_tag().json()
         # 获取tag_id列表
-        tag_id_list = [j["id"] for i in res_body["tag_group"] for j in i["tag"]]
+        tag_id_list = [j["id"] for i in r["tag_group"] for j in i["tag"]]
         # 断言，被删除的tag_id不在tag_id列表中
-        assert tag_id not in tag_id_list
+        self.assert_not_in(tag_id, tag_id_list)
 
     def test_del_corp_tag_by_group_id(self):
         # 添加数据
@@ -81,13 +80,13 @@ class TestWeWorkApi:
         r = self.tag.del_corp_tag(**json_data)
 
         # 断言返回errorcode
-        assert r.json()["errcode"] == 0
+        self.assert_suuc_code(r)
         # 调用get_corp_tag查询接口，查询当前所有标签
-        res_body = self.tag.get_corp_tag().json()
+        r = self.tag.get_corp_tag().json()
         # 获取group_id列表
-        group_id_list = [i["group_id"] for i in res_body["tag_group"]]
+        group_id_list = [i["group_id"] for i in r["tag_group"]]
         # 断言，被删除的group_id不在group_id列表中
-        assert group_id not in group_id_list
+        self.assert_not_in(group_id, group_id_list)
 
     def test_edit_corp_tag(self):
         # 添加数据
@@ -98,17 +97,18 @@ class TestWeWorkApi:
 
         # 修改标签
         name = "EDIT_NAME_1" + rq
-        r = self.tag.edit_corp_tag(tag_id=tag_id,name=name)
+        r = self.tag.edit_corp_tag(tag_id=tag_id, name=name)
         # 断言返回errorcode
-        assert r.json()["errcode"] == 0
+        self.assert_suuc_code(r)
 
         # 调用get_corp_tag查询接口，查询修改的tag name
         rsp_body = self.tag.get_corp_tag(tag_id).json()
         # 断言 tag_name是否与传入的一致
         tag_name_list = [tag["name"] for group in rsp_body["tag_group"] for tag in group["tag"]]
-        assert name in tag_name_list
+        self.assert_in(name, tag_name_list)
 
     @pytest.mark.smoke
+    @pytest.mark.externalcontact
     def test_smoke_flow(self):
         # 冒烟测试
         # 线上巡检
@@ -125,23 +125,23 @@ class TestWeWorkApi:
         name = "EDIT_NAME_1" + rq
         r = self.tag.edit_corp_tag(tag_id=tag_id, name=name)
         # 断言返回errorcode
-        assert r.json()["errcode"] == 0
+        self.assert_suuc_code(r)
 
         # 调用get_corp_tag查询接口，查询修改的tag name
         rsp_body = self.tag.get_corp_tag(tag_id).json()
         # 断言 tag_name是否与传入的一致
         tag_name_list = [tag["name"] for group in rsp_body["tag_group"] for tag in group["tag"]]
-        assert name in tag_name_list
+        self.assert_in(name, tag_name_list)
 
         # 删除标签
         tag_id_list = [tag_id]
         r = self.tag.del_corp_tag(tag_id_list=tag_id_list)
         # 断言返回errorcode
-        assert r.json()["errcode"] == 0
+        self.assert_suuc_code(r)
 
         # 调用get_corp_tag查询接口，查询当前所有标签
-        res_body = self.tag.get_corp_tag().json()
+        r = self.tag.get_corp_tag().json()
         # 获取tag_id列表
-        tag_id_list = [j["id"] for i in res_body["tag_group"] for j in i["tag"]]
+        tag_id_list = [j["id"] for i in r["tag_group"] for j in i["tag"]]
         # 断言，被删除的tag_id不在tag_id列表中
-        assert tag_id not in tag_id_list
+        self.assert_not_in(tag_id, tag_id_list)

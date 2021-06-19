@@ -10,18 +10,21 @@ from api_auto_demo.api_auto_demo2.api.base_api import BaseApi
 logging.basicConfig(level=logging.INFO)
 from ..comm import config
 
-cfg = config.COMMCFG
+CFG = config.COMMCFG
 
 
 class WeWorkApi(BaseApi):
+    def __init__(self, corpid=CFG.CORPID, corpsecret=CFG.EXTERNALCONTACT_CORPSECRET):
+        self.corpid = corpid
+        self.corpsecret = corpsecret
 
     def get_token(self, ):
         data = {
             "method": "get",
-            "url": cfg.GETTOKEN,
+            "url": CFG.GETTOKEN,
             "params": {
-                "corpid": cfg.CORPID,
-                "corpsecret": cfg.CORPSECRET
+                "corpid": self.corpid,
+                "corpsecret": self.corpsecret
             }
         }
         res = self.request(data)
